@@ -1,10 +1,10 @@
-use std::{
-    fs::{File,metadata},
-    io::{BufRead, BufReader},
-    env,
-};
 use clap::Parser;
 use file_format::FileFormat;
+use std::{
+    env,
+    fs::{metadata, File},
+    io::{BufRead, BufReader},
+};
 
 const DEFAULT_FALIURE: &str = "Unknown";
 
@@ -16,28 +16,56 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-    let mut file_path = env::current_dir().unwrap();
+    let mut file_path = match env::current_dir() {
+        Ok(path) => path,
+        Err(_) => {
+            eprintln!("Cound get the current path");
+            return;
+        }
+    };
     file_path.push(&args.file_name);
 
-    let file_name = args.file_name;
     let file_extension = match file_path.extension() {
         Some(ext) => ext.to_str().unwrap_or(DEFAULT_FALIURE),
-        None => DEFAULT_FALIURE
+        None => DEFAULT_FALIURE,
     };
 
-    let file = File::open(&file_path).expect("Failed to open the file");
+
+    let metadata = match metadata(&file_path) {
+        Ok(metadata) => {
+            if metadata.is_file() {
+                metadata
+            } else {
+                eprintln!("\"{}\" is not a file!", args.file_name);
+                return;
+            }
+        }
+        Err(_) => {
+            eprintln!("Could not read the metadata on {}", args.file_name);
+            return;
+        }
+    };
+    let file_size = metadata.len() as f64 / 1_048_576.0;
+    
+    let file = match File::open(&file_path) {
+        Ok(file) => file,
+        Err(_) => {
+            println!("Could not open \"{}\"", args.file_name);
+            return;
+        }
+    };
+
     let file_buffer = BufReader::new(&file);
 
-    let (line_count, word_count, char_count) = file_buffer.lines().fold((0, 0, 0), |counts, line_result| {
-        let line = line_result.unwrap_or_else(|_| String::new());
-
-        let line_chars: Vec<char> = line.chars().collect();
-        let line_words: Vec<&str> = line.split_whitespace().collect();
-
-        (counts.0 + 1, counts.1 + line_words.len(), counts.2 + line_chars.len())
-    });
-
-    let file_size = metadata(&file_path).expect("Error retrieving file metadata").len() as f64 / 1_048_576.0;
+    let (line_count, word_count, char_count) =
+        file_buffer.lines().fold((0, 0, 0), |counts, line_result| {
+            let line = line_result.unwrap_or_else(|_| String::new());
+            (
+                counts.0 + 1,
+                counts.1 + line.split_whitespace().count(),
+                counts.2 + line.chars().count(),
+            )
+        });
 
     let file_type = match FileFormat::from_file(file_path.clone()) {
         Ok(format) => {
@@ -48,22 +76,25 @@ fn main() {
                 format
             }
         }
-        Err(_) => String::from(DEFAULT_FALIURE)
+        Err(_) => String::from(DEFAULT_FALIURE),
     };
 
     println!("[Flyser :3]\n");
-    println!("File name: {}", file_name);
-    println!("File type: {}", file_type);
-    println!("File path: {}", file_path.to_str().unwrap_or(DEFAULT_FALIURE));
+    println!("File name: {}", args.file_name.split('/').last().unwrap_or(DEFAULT_FALIURE).split('.').next().unwrap_or(DEFAULT_FALIURE));
+    println!("File type: {file_type}");
+    println!(
+        "File path: {}",
+        file_path.to_str().unwrap_or(DEFAULT_FALIURE)
+    );
 
-    println!("\nFile size: {:.5} MB", file_size);
+    println!("\nFile size: {file_size:.5} MB");
 
-    println!("\nTotal number of lines: {}", line_count);
-    println!("Total number or words: {}", word_count);
-    println!("Total number of characters: {}", char_count);
+    println!("\nTotal number of lines: {line_count}");
+    println!("Total number or words: {word_count}");
+    println!("Total number of characters: {char_count}");
 }
 
-pub fn get_type_from_ext(ext: &str) -> &str {
+fn get_type_from_ext(ext: &str) -> &str {
     match ext {
         "rs" => "Rust (rs)",
         "py" => "Python (py)",
@@ -90,7 +121,8 @@ pub fn get_type_from_ext(ext: &str) -> &str {
         "sh" => "Shell Script (sh)",
         "bat" => "Batch (bat)",
         "ps1" => "PowerShell (ps1)",
+        "toml" => "Tom's Obvious Minimal Language (toml)",
 
-        _ => DEFAULT_FALIURE
+        _ => DEFAULT_FALIURE,
     }
 }
