@@ -1,9 +1,10 @@
-use std;
-use std::fs::File;
-use std::env;
-use std::io::{BufRead, BufReader};
-use std::fs::metadata;
+use std::{
+    fs::{File,metadata},
+    io::{BufRead, BufReader},
+    env,
+};
 use clap::Parser;
+use file_format::{FileFormat, Kind};
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
