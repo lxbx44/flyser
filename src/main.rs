@@ -79,7 +79,7 @@ fn main() {
         Err(_) => String::from(DEFAULT_FALIURE),
     };
 
-    println!("[Flyser :3]\n");
+    println!("[Flyser]\n");
     println!("File name: {}", args.file_name.split('/').last().unwrap_or(DEFAULT_FALIURE).split('.').next().unwrap_or(DEFAULT_FALIURE));
     println!("File type: {file_type}");
     println!(
@@ -122,6 +122,7 @@ fn get_type_from_ext(ext: &str) -> &str {
         "bat" => "Batch (bat)",
         "ps1" => "PowerShell (ps1)",
         "toml" => "Tom's Obvious Minimal Language (toml)",
+        "exe" => "Windows executable (exe)",
 
         _ => DEFAULT_FALIURE,
     }
