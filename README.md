@@ -2,9 +2,7 @@
 
 A simple file analyser with rust.
 
-By Aria Fibla
-
-![](.data/gif1.gif)
+![](.data/img.png)
 
 ## Installation
 
