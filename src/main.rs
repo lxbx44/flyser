@@ -193,6 +193,7 @@ fn get_type_from_ext(ext: &str) -> &str {
         "ps1" => "PowerShell (ps1)",
         "toml" => "Tom's Obvious Minimal Language (toml)",
         "exe" => "Windows executable (exe)",
+        "md" => "Markdown (md)"
 
         _ => DEFAULT_FALIURE,
     }
