@@ -167,11 +167,8 @@ fn round_num(number: f64, decimal_places: u32) -> f64 {
 fn get_type_from_ext(ext: &str) -> &str {
     match ext {
         "rs" => "Rust (rs)",
-        "py" => "Python (py)",
-        "html" => "HyperText Markup Language (html)",
         "css" => "Cascading Style Sheets (css)",
         "scss" => "Syntactically Awesome Style Sheets (scss)",
-        "jar" => "Java (jar)",
         "java" => "Java (java)",
         "cpp" => "C++ (cpp)",
         "js" => "JavaScript (js)",
@@ -179,7 +176,6 @@ fn get_type_from_ext(ext: &str) -> &str {
         "php" => "PHP (php)",
         "swift" => "Swift (swift)",
         "go" => "Go (go)",
-        "rb" => "Ruby (rb)",
         "c" => "C (c)",
         "cs" => "C# (cs)",
         "csx" => "C# (csx)",
@@ -189,11 +185,10 @@ fn get_type_from_ext(ext: &str) -> &str {
         "m" => "MATLAB (m)",
         "sql" => "SQL (sql)",
         "sh" => "Shell Script (sh)",
-        "bat" => "Batch (bat)",
         "ps1" => "PowerShell (ps1)",
         "toml" => "Tom's Obvious Minimal Language (toml)",
-        "exe" => "Windows executable (exe)",
-        "md" => "Markdown (md)"
+        "md" => "Markdown (md)",
+        "txt" => "Text file (txt)",
 
         _ => DEFAULT_FALIURE,
     }
