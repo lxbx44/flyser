@@ -189,6 +189,7 @@ fn get_type_from_ext(ext: &str) -> &str {
         "toml" => "Tom's Obvious Minimal Language (toml)",
         "md" => "Markdown (md)",
         "txt" => "Text file (txt)",
+        "dart" => "Dart (dart)",
 
         _ => DEFAULT_FALIURE,
     }
