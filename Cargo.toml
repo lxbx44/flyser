@@ -1,5 +1,6 @@
 [package]
 name = "flyser"
+authors = ["lxbx44", "slushee"]
 version = "0.1.0"
 edition = "2021"
 

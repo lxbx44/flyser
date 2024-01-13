@@ -2,8 +2,14 @@ use clap::Parser;
 use file_format::FileFormat;
 use std::{
     env,
-    fs::{metadata, File},
-    io::{BufRead, BufReader},
+    fs::{
+        metadata, 
+        File
+    },
+    io::{
+        BufRead, 
+        BufReader
+    },
 };
 
 use comfy_table::{
@@ -18,9 +24,11 @@ use comfy_table::{
 
 const DEFAULT_FALIURE: &str = "Unknown";
 
+/// A program written in Rust to fetch basic information of a file
 #[derive(Parser, Debug)]
-#[command(author, version, about, long_about = None)]
+#[command(author, version)]
 struct Args {
+    /// Name of the file you want to fetch information from
     file_name: String,
 }
 
@@ -90,7 +98,13 @@ fn main() {
     };
 
 
-    let name = args.file_name.split('/').last().unwrap_or(DEFAULT_FALIURE).split('.').next().unwrap_or(DEFAULT_FALIURE);
+    let name = args.file_name
+        .split('/')
+        .last()
+        .unwrap_or(DEFAULT_FALIURE)
+        .split('.')
+        .next()
+        .unwrap_or(DEFAULT_FALIURE);
 
     let f_size: f64 = round_num(file_size, 5);
 
